@@ -1,0 +1,8 @@
+---
+title: "Manipulative plasmids through RsmQ: Index page"
+author: "jpjh"
+date: "November 2021"
+output: rmarkdown::github_document
+---
+
+1. **[RsmA distribution across plasmids(`PLASMAN_1_RsmDistribution.Rmd`)](PLASMAN_1_RsmDistribution.md)**
