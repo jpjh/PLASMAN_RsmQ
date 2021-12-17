@@ -6,3 +6,4 @@ output: rmarkdown::github_document
 ---
 
 1. **[RsmA distribution across plasmids(`PLASMAN_1_RsmDistribution.Rmd`)](PLASMAN_1_RsmDistribution.md)**
+2. **[RsmA comparison between plasmids and chromosomes(`PLASMAN_2_RsmPhylogeny.Rmd`)](PLASMAN_2_RsmPhylogeny.md)**
