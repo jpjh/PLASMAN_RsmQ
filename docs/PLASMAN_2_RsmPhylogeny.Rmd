@@ -1,5 +1,5 @@
 ---
-title: "2. Phylogenetic analyses of plasmid-borne RsmA"
+title: "Part 2: Phylogenetic analyses of plasmid-borne RsmA"
 author: "jpjh"
 date: "Nov 2021"
 output: rmarkdown::github_document

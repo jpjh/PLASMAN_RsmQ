@@ -1,4 +1,4 @@
-1. Bioinformatic analyses of plasmid-borne RsmA
+Part 1: Bioinformatic analyses of plasmid-borne RsmA
 ================
 jpjh
 November 2021
@@ -362,9 +362,9 @@ counts_family_mobility %>% group_by(Family) %>%
 | Microbacteriaceae   | 1.0000000 | 1.0000000 |
 | Micrococcaceae      | 1.0000000 | 1.0000000 |
 | Piscirickettsiaceae | 0.5801048 | 1.0000000 |
-| Pseudomonadaceae    | 0.9640180 | 1.0000000 |
+| Pseudomonadaceae    | 0.9675162 | 1.0000000 |
 | Vibrionaceae        | 1.0000000 | 1.0000000 |
-| Xanthomonadaceae    | 0.5872064 | 1.0000000 |
+| Xanthomonadaceae    | 0.5637181 | 1.0000000 |
 
 Significant effect for Legionellaceae (more CsrA on conjugative
 plasmids, p_adj = 0.02), but this could be due to repeated sampling of

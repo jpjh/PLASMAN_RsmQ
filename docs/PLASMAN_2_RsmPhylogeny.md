@@ -1,4 +1,4 @@
-2. Phylogenetic analyses of plasmid-borne RsmA
+Part 2: Phylogenetic analyses of plasmid-borne RsmA
 ================
 jpjh
 Nov 2021

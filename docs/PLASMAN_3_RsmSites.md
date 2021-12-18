@@ -1,4 +1,4 @@
-3. Comparison of CsrA/RsmA-binding sites on plasmids
+Part 3: Comparison of CsrA/RsmA-binding sites on plasmids
 ================
 jpjh
 December 2021
