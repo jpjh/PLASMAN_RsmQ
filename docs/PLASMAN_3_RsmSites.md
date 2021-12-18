@@ -132,7 +132,7 @@ cds_csra_count <- cds_csra_count %>%
 ![](PLASMAN_3_RsmSites_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 ``` r
-library(patchwork())
+library(patchwork)
 
 png(filename="./figs/3_1_csra_site_density.png", height=3, width=4.5, units="in", res=300)
 (cds_csra_total_plot + theme_pub()) + 

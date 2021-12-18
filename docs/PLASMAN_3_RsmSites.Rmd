@@ -117,7 +117,7 @@ cds_csra_count <- cds_csra_count %>%
   labs(x="Number CDS with predicted CsrA/RsmA binding sites",
        fill="encodes CsrA/RsmA?", y="count"))
 
-library(patchwork())
+library(patchwork)
 
 png(filename="./figs/3_1_csra_site_density.png", height=3, width=4.5, units="in", res=300)
 (cds_csra_total_plot + theme_pub()) + 
