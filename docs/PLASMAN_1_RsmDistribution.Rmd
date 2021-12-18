@@ -1,5 +1,5 @@
 ---
-title: "Bioinformatic analyses of plasmid-borne RsmA"
+title: "1. Bioinformatic analyses of plasmid-borne RsmA"
 author: "jpjh"
 date: "November 2021"
 output: rmarkdown::github_document
