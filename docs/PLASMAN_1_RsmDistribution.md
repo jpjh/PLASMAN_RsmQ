@@ -178,7 +178,8 @@ plasmid_csra %>% group_by(Class, Accession) %>% summarise(n = n()) %>%
   summarise(n = n()) %>% kable() #92/98 from Gammaproteobacteria
 ```
 
-    ## `summarise()` has grouped output by 'Class'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'Class'. You can override using the
+    ## `.groups` argument.
 
 | Class               |   n |
 |:--------------------|----:|
@@ -201,16 +202,26 @@ ggplot(data=plasmid_csra, aes(x=Genus)) + geom_bar() + theme_pub() +
 (plot_bar_Class <- ggplot(data=plasmid_csra, aes(x=Genus, fill=Class, alpha=Duplicated)) + geom_bar() + 
   scale_fill_brewer(type="qual", palette=6, name="") + 
   labs(y = "# plasmid-borne CsrA/RsmA homologues") + 
-  scale_alpha_manual(values=c(0.5,1)) + theme_pub() +
+  scale_alpha_manual(values=c(0.5,1), guide="none") + theme_pub() +
   theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position="right"))
 ```
 
 ![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 ``` r
-png(filename="./figs/1_1_bar_by_genus.png", height=3, width=4.5, units="in", res=300)
+png(filename="./figs/1_1_bar_by_genus.png", height=2.3, width=2.3, units="in", res=600)
 plot_bar_Class + theme_pub() +
-  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position="right")
+  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position=c(0.3,0.75))
+dev.off()
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
+``` r
+svglite::svglite(filename="./figs/1_1_bar_by_genus.svg", height=2.3, width=2.3)
+plot_bar_Class + theme_pub() +
+  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position=c(0.3,0.75))
 dev.off()
 ```
 
@@ -252,7 +263,8 @@ compass_subset_fam <- filter(compass, Family %in% csra_families)
   mutate(totals = N + Y)) %>% kable()
 ```
 
-    ## `summarise()` has grouped output by 'Family'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'Family'. You can override using the
+    ## `.groups` argument.
 
 | Family              |   N |   Y | totals |
 |:--------------------|----:|----:|-------:|
@@ -312,7 +324,8 @@ Are there any obvious correlations between CsrA and mobility?
    mutate(totals = N + Y, label = paste(Y, totals, sep="/"))) %>% kable()
 ```
 
-    ## `summarise()` has grouped output by 'Family', 'Predicted.Mobility'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'Family', 'Predicted.Mobility'. You can
+    ## override using the `.groups` argument.
 
 | Family              | Predicted.Mobility |   N |   Y | totals | label |
 |:--------------------|:-------------------|----:|----:|-------:|:------|
@@ -362,9 +375,9 @@ counts_family_mobility %>% group_by(Family) %>%
 | Microbacteriaceae   | 1.0000000 | 1.0000000 |
 | Micrococcaceae      | 1.0000000 | 1.0000000 |
 | Piscirickettsiaceae | 0.5801048 | 1.0000000 |
-| Pseudomonadaceae    | 0.9675162 | 1.0000000 |
+| Pseudomonadaceae    | 0.9700150 | 1.0000000 |
 | Vibrionaceae        | 1.0000000 | 1.0000000 |
-| Xanthomonadaceae    | 0.5637181 | 1.0000000 |
+| Xanthomonadaceae    | 0.5772114 | 1.0000000 |
 
 Significant effect for Legionellaceae (more CsrA on conjugative
 plasmids, p_adj = 0.02), but this could be due to repeated sampling of
@@ -483,7 +496,8 @@ Pseudomonadaceae plasmids do. Basic analysis:
   mutate(totals = N + Y, ratio = Y/totals)) %>% kable()
 ```
 
-    ## `summarise()` has grouped output by 'Family'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'Family'. You can override using the
+    ## `.groups` argument.
 
 | Family              |    N |   Y | totals |     ratio |
 |:--------------------|-----:|----:|-------:|----------:|
@@ -649,11 +663,11 @@ library(scales)
 
     ## 
     ## Attaching package: 'scales'
-
+    ## 
     ## The following object is masked from 'package:purrr':
     ## 
     ##     discard
-
+    ## 
     ## The following object is masked from 'package:readr':
     ## 
     ##     col_factor
@@ -662,25 +676,34 @@ library(scales)
 library(ggrepel)
 
 (family_umap <- ggplot(data=compass_mash_UMAP, aes(x=x, y=y, colour=fam_highlight, alpha=fam_highlight)) + 
-  geom_point(shape=16) + 
-  scale_alpha_manual(values=c(rep(0.8, length(families_to_highlight)), 0.2), name="") +
-  scale_colour_manual(values=c(hue_pal()(length(families_to_highlight)), "grey50"), name="") +
-  geom_point(data=subset(compass_mash_UMAP, encodes_csra=="Y"), 
-             aes(fill=fam_highlight),
-             shape=21, colour="black", show.legend = FALSE) +
-  geom_text_repel(data=subset(compass_mash_UMAP, 
-                              Accession %in% c("AM235768.1","NC_022344.1","NC_006365.1",
-                                               "NZ_CP011850.1","NC_007507.1","NZ_CP019045.1",
-                                               "NZ_CP014843.1")),
-                  aes(label=Plasmid), colour="black", box.padding = 1, max.overlaps = Inf, size=2.5, show.legend=FALSE) +
-  theme(legend.position="bottom"))
+    geom_point(shape=16, size=0.6) + 
+    scale_alpha_manual(values=c(rep(0.8, length(families_to_highlight)), 0.2), name="") +
+    scale_colour_manual(values=c(hue_pal()(length(families_to_highlight)), "grey50"), name="") +
+    geom_point(data=subset(compass_mash_UMAP, encodes_csra=="Y"), 
+               aes(fill=fam_highlight),
+               shape=21, colour="black", size=0.6, show.legend = FALSE) +
+    guides(colour = guide_legend(nrow = 2, byrow = T)) +
+    geom_text_repel(data=subset(compass_mash_UMAP,
+                                Accession %in% c("AM235768.1","NC_022344.1")),
+                    # "NC_006365.1","NZ_CP011850.1","NC_007507.1","NZ_CP019045.1","NZ_CP014843.1")),
+                    aes(label=Plasmid), colour="black", box.padding = 1, max.overlaps = Inf, size=2.5, show.legend=FALSE) +
+    theme(legend.position="bottom"))
 ```
 
 ![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
-png(filename="./figs/1_5_family_umap.png", height=4.5, width=4.5, units="in", res=300)
-family_umap + theme_pub()
+png(filename="./figs/1_5_family_umap.png", height=2.5, width=3.5, units="in", res=600)
+family_umap + theme_pub() + theme(legend.position="right")
+dev.off()
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
+``` r
+svglite::svglite("./figs/1_5_family_umap.svg", height=2.5, width=3.5)
+family_umap + theme_pub() + theme(legend.position="right")
 dev.off()
 ```
 

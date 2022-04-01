@@ -488,19 +488,27 @@ labels_pst1 <- filter(labels_ps, label %in% pst1@phylo$tip.label)
     labels_pst1 +
     scale_colour_gradientn(
       colours=c("grey80","grey80","grey60","grey60","grey40","black"), 
-      na.value="black", guide = "none") +
+      na.value="black", guide="none") +
     new_scale("colour") +
     geom_tippoint(aes(shape=location, size=location, colour=species)) +
-    scale_colour_manual(values=c(hue_pal()(length(spc_order)), "grey50")) +
+    scale_colour_manual(values=c(hue_pal()(length(spc_order)), "grey50"),
+                        guide=guide_legend(label.theme=element_text(angle = 0, size=9, face = "italic")),
+                        name="") +
     geom_hilight(node=203, fill="steelblue", alpha=0.2, size=0, expand=0.02) +
     geom_hilight(node=113, fill="palegreen3", alpha=0.2, size=0, expand=0.02) +
-    geom_tiplab(aes(label=text), show.legend=FALSE, hjust=-0.3, size=3) +
-    scale_shape_manual(values=c(16,1)) +
-    scale_size_manual(values=c(1.5,2.5)) +
-    theme(legend.text=element_text(face="italic")))
+    geom_tiplab(aes(label=text), show.legend=FALSE, hjust=-0.3, size=4) +
+    scale_shape_manual(values=c(16,1), breaks=c("chr","pla"), 
+                       labels=c("chromosomal","plasmid"), name="") +
+    scale_size_manual(values=c(1.5,2.5), breaks=c("chr","pla"), 
+                       labels=c("chromosomal","plasmid"), name="") +
+    theme(legend.position="bottom", legend.box="vertical", legend.direction="horizontal"))
 
-png(filename="./figs/2_2_Ps_tree_1.png", height=6, width=10, units="in", res=300)
-tree_ps + vexpand(0.2, direction=1)
+png(filename="./figs/2_2_Ps_tree_1.png", height=5, width=7, units="in", res=600)
+tree_ps + vexpand(0.4, direction=1)
+dev.off()
+
+svglite::svglite("./figs/2_2_Ps_tree_1.svg", height=5, width=7)
+tree_ps + vexpand(0.4, direction=1)
 dev.off()
 ```
 

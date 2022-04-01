@@ -255,9 +255,7 @@ csra_seqs <- read.table("./working_2/COMPASS_chr_CsrA_matches_na.tsv", header=FA
 ```
 
     ## Joining, by = "file_id"
-
     ## Joining, by = c("file_id", "orf")
-
     ## Joining, by = "project"
 
 Next steps: pull together into the huge table, which will include
@@ -340,7 +338,8 @@ This leaves 5 sequences.
   group_by(Genus) %>% count()
 ```
 
-    ## `summarise()` has grouped output by 'project', 'Genus', 'Species'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'project', 'Genus', 'Species'. You can
+    ## override using the `.groups` argument.
 
     ## # A tibble: 4 × 2
     ## # Groups:   Genus [4]
@@ -623,16 +622,20 @@ labels_pst1 <- filter(labels_ps, label %in% pst1@phylo$tip.label)
     labels_pst1 +
     scale_colour_gradientn(
       colours=c("grey80","grey80","grey60","grey60","grey40","black"), 
-      na.value="black", guide = "none") +
+      na.value="black", guide="none") +
     new_scale("colour") +
     geom_tippoint(aes(shape=location, size=location, colour=species)) +
-    scale_colour_manual(values=c(hue_pal()(length(spc_order)), "grey50")) +
+    scale_colour_manual(values=c(hue_pal()(length(spc_order)), "grey50"),
+                        guide=guide_legend(label.theme=element_text(angle = 0, size=9, face = "italic")),
+                        name="") +
     geom_hilight(node=203, fill="steelblue", alpha=0.2, size=0, expand=0.02) +
     geom_hilight(node=113, fill="palegreen3", alpha=0.2, size=0, expand=0.02) +
-    geom_tiplab(aes(label=text), show.legend=FALSE, hjust=-0.3, size=3) +
-    scale_shape_manual(values=c(16,1)) +
-    scale_size_manual(values=c(1.5,2.5)) +
-    theme(legend.text=element_text(face="italic")))
+    geom_tiplab(aes(label=text), show.legend=FALSE, hjust=-0.3, size=4) +
+    scale_shape_manual(values=c(16,1), breaks=c("chr","pla"), 
+                       labels=c("chromosomal","plasmid"), name="") +
+    scale_size_manual(values=c(1.5,2.5), breaks=c("chr","pla"), 
+                       labels=c("chromosomal","plasmid"), name="") +
+    theme(legend.position="bottom", legend.box="vertical", legend.direction="horizontal"))
 ```
 
     ## Average angle change [1] 0.192816405435805
@@ -644,8 +647,17 @@ labels_pst1 <- filter(labels_ps, label %in% pst1@phylo$tip.label)
 ![](PLASMAN_2_RsmPhylogeny_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 ``` r
-png(filename="./figs/2_2_Ps_tree_1.png", height=6, width=10, units="in", res=300)
-tree_ps + vexpand(0.2, direction=1)
+png(filename="./figs/2_2_Ps_tree_1.png", height=5, width=7, units="in", res=600)
+tree_ps + vexpand(0.4, direction=1)
+dev.off()
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
+``` r
+svglite::svglite("./figs/2_2_Ps_tree_1.svg", height=5, width=7)
+tree_ps + vexpand(0.4, direction=1)
 dev.off()
 ```
 
@@ -754,13 +766,11 @@ analyse_distmat <- function(x) {
 ```
 
     ## Rows: 146 Columns: 149
-
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr   (1): X149
     ## dbl (146): X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16...
     ## lgl   (2): X1, X148
-
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -778,13 +788,11 @@ analyse_distmat <- function(x) {
 ```
 
     ## Rows: 146 Columns: 149
-
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr   (1): X149
     ## dbl (146): X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16...
     ## lgl   (2): X1, X148
-
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -802,13 +810,11 @@ analyse_distmat <- function(x) {
 ```
 
     ## Rows: 80 Columns: 83
-
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr  (1): X83
     ## dbl (80): X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16,...
     ## lgl  (2): X1, X82
-
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -826,13 +832,11 @@ analyse_distmat <- function(x) {
 ```
 
     ## Rows: 80 Columns: 83
-
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr  (1): X83
     ## dbl (80): X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16,...
     ## lgl  (2): X1, X82
-
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
