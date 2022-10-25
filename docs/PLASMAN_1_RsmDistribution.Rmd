@@ -149,6 +149,9 @@ plasmid_csra %>% filter(!duplicated(Accession)) %>% nrow() # across 98 plasmids
 
 plasmid_csra %>% group_by(Class, Accession) %>% summarise(n = n()) %>% 
   summarise(n = n()) %>% kable() #92/98 from Gammaproteobacteria
+
+plasmid_csra %>% group_by(Genus, Accession) %>% summarise(n = n()) %>% 
+  summarise(n = n()) %>% kable()
 ```
 
 Plot CsrA homologues across Genera.
@@ -176,7 +179,40 @@ dev.off()
 
 Shows almost all (>93%) come from Gammaproteobacteria. Within Gammaproteobacteria, about 40% have at least one duplicate at the amino-acid level in the database.
 
-How does this compare with plasmid size and other features? Plot CsrA-containing plasmids onto a density plot for each Family. For this, remove the duplicates, because they can confuse the density plot, and remove all Families with <20 plasmids.
+Plot as a proportion of the total in the database. Here, plot CsrA/RsmA *plasmids*,rather than homologues. Here, the problem of duplicate CsrA/RsmA sequences is complicated as a plasmid may have multiple homologues on it. Remove duplicate plasmids, and plot all remaining sequences here. 
+
+```{r}
+compass_genus_totals <- compass %>% group_by(Genus) %>% count()
+
+plasmid_csra_proportions <- plasmid_csra %>% filter(!Accession %in% dups$V1) %>%
+  group_by(Class, Genus, Accession) %>% summarise(n = n()) %>% 
+  summarise(n = n()) %>% left_join(compass_genus_totals, by="Genus") %>%
+  mutate(proportion = n.x/n.y)
+
+plasmid_csra_proportions_text <- plasmid_csra_proportions %>% group_by(Class, Genus) %>% 
+  summarise(positive = sum(n.x), total = sum(n.y))
+
+(plot_bar_Class_proportion <- ggplot(data=plasmid_csra_proportions, aes(x=Genus, y=proportion, fill=Class)) + 
+    geom_bar(stat="identity") + 
+  scale_fill_brewer(type="qual", palette=6, name="") + 
+  labs(y = "proportion plasmids with ≥1 CsrA/RsmA homologue") + 
+    geom_text(data=plasmid_csra_proportions_text,
+              y=-0.02, hjust=0.5, aes(label=paste(positive, " / ", total, sep="")), size=1.5) + 
+  scale_alpha_manual(values=c(0.5,1), guide="none") + theme_pub() +
+  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position="right"))
+
+png(filename="./figs/1_1_bar_by_genus_proportion.png", height=2.6, width=4.6, units="in", res=600)
+plot_bar_Class_proportion + theme_pub() +
+  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position=c(0.175,0.75))
+dev.off()
+
+svglite::svglite(filename="./figs/1_1_bar_by_genus_proportion.svg", height=2.3, width=4.6)
+plot_bar_Class_proportion + theme_pub() +
+  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position=c(0.175,0.75))
+dev.off()
+```
+
+How does this compare with plasmid size and other features? Plot CsrA-containing plasmids onto a density plot for each Family. For this, do not plot putative duplicate plasmids, because they can confuse the density plot, and remove all Families with <20 plasmids.
 
 ```{r}
 compass <- compass %>% mutate(encodes_csra = ifelse(Accession %in% plasmid_csra$Accession, "Y", "N"))

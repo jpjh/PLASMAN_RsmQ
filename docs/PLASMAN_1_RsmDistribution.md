@@ -7,9 +7,9 @@ November 2021
 
 Questions:
 
--   What plasmids are RsmA homologues on?
--   What are the sequences of these genes?
--   What kinds of plasmids are these sequences on?
+- What plasmids are RsmA homologues on?
+- What are the sequences of these genes?
+- What kinds of plasmids are these sequences on?
 
 COMPASS plasmid database was annotated using
 [PROKKA](https://github.com/tseemann/prokka), with default settings:
@@ -189,6 +189,32 @@ plasmid_csra %>% group_by(Class, Accession) %>% summarise(n = n()) %>%
 | Planctomycetia      |   2 |
 | Thermomicrobia      |   1 |
 
+``` r
+plasmid_csra %>% group_by(Genus, Accession) %>% summarise(n = n()) %>% 
+  summarise(n = n()) %>% kable()
+```
+
+    ## `summarise()` has grouped output by 'Genus'. You can override using the
+    ## `.groups` argument.
+
+| Genus           |   n |
+|:----------------|----:|
+| Ahniella        |   1 |
+| Alteromonas     |   3 |
+| Arthrobacter    |   1 |
+| Bacillus        |   1 |
+| Curtobacterium  |   1 |
+| Halioglobus     |   1 |
+| Isosphaera      |   1 |
+| Legionella      |  21 |
+| Methylophaga    |   2 |
+| Piscirickettsia |  12 |
+| Planctopirus    |   1 |
+| Pseudomonas     |  42 |
+| Thermomicrobium |   1 |
+| Vibrio          |   1 |
+| Xanthomonas     |   9 |
+
 Plot CsrA homologues across Genera.
 
 ``` r
@@ -228,14 +254,75 @@ dev.off()
     ## quartz_off_screen 
     ##                 2
 
-Shows almost all (>93%) come from Gammaproteobacteria. Within
+Shows almost all (\>93%) come from Gammaproteobacteria. Within
 Gammaproteobacteria, about 40% have at least one duplicate at the
 amino-acid level in the database.
 
+Plot as a proportion of the total in the database. Here, plot CsrA/RsmA
+*plasmids*,rather than homologues. Here, the problem of duplicate
+CsrA/RsmA sequences is complicated as a plasmid may have multiple
+homologues on it. Remove duplicate plasmids, and plot all remaining
+sequences here.
+
+``` r
+compass_genus_totals <- compass %>% group_by(Genus) %>% count()
+
+plasmid_csra_proportions <- plasmid_csra %>% filter(!Accession %in% dups$V1) %>%
+  group_by(Class, Genus, Accession) %>% summarise(n = n()) %>% 
+  summarise(n = n()) %>% left_join(compass_genus_totals, by="Genus") %>%
+  mutate(proportion = n.x/n.y)
+```
+
+    ## `summarise()` has grouped output by 'Class', 'Genus'. You can override using
+    ## the `.groups` argument.
+    ## `summarise()` has grouped output by 'Class'. You can override using the
+    ## `.groups` argument.
+
+``` r
+plasmid_csra_proportions_text <- plasmid_csra_proportions %>% group_by(Class, Genus) %>% 
+  summarise(positive = sum(n.x), total = sum(n.y))
+```
+
+    ## `summarise()` has grouped output by 'Class'. You can override using the
+    ## `.groups` argument.
+
+``` r
+(plot_bar_Class_proportion <- ggplot(data=plasmid_csra_proportions, aes(x=Genus, y=proportion, fill=Class)) + 
+    geom_bar(stat="identity") + 
+  scale_fill_brewer(type="qual", palette=6, name="") + 
+  labs(y = "proportion plasmids with ≥1 CsrA/RsmA homologue") + 
+    geom_text(data=plasmid_csra_proportions_text,
+              y=-0.02, hjust=0.5, aes(label=paste(positive, " / ", total, sep="")), size=1.5) + 
+  scale_alpha_manual(values=c(0.5,1), guide="none") + theme_pub() +
+  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position="right"))
+```
+
+![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+png(filename="./figs/1_1_bar_by_genus_proportion.png", height=2.6, width=4.6, units="in", res=600)
+plot_bar_Class_proportion + theme_pub() +
+  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position=c(0.175,0.75))
+dev.off()
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
+``` r
+svglite::svglite(filename="./figs/1_1_bar_by_genus_proportion.svg", height=2.3, width=4.6)
+plot_bar_Class_proportion + theme_pub() +
+  theme(axis.text.x = element_text(face="italic", angle=45, hjust=1), legend.position=c(0.175,0.75))
+dev.off()
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
 How does this compare with plasmid size and other features? Plot
 CsrA-containing plasmids onto a density plot for each Family. For this,
-remove the duplicates, because they can confuse the density plot, and
-remove all Families with \<20 plasmids.
+do not plot putative duplicate plasmids, because they can confuse the
+density plot, and remove all Families with \<20 plasmids.
 
 ``` r
 compass <- compass %>% mutate(encodes_csra = ifelse(Accession %in% plasmid_csra$Accession, "Y", "N"))
@@ -303,7 +390,7 @@ compass_subset_fam_20 <- filter(compass_subset_fam,
         panel.border = element_blank(), axis.ticks.y = element_blank(), legend.position="bottom"))
 ```
 
-![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
 png(filename="./figs/1_2_distribution_family.png", height=3, width=4.5, units="in", res=300)
@@ -375,9 +462,9 @@ counts_family_mobility %>% group_by(Family) %>%
 | Microbacteriaceae   | 1.0000000 | 1.0000000 |
 | Micrococcaceae      | 1.0000000 | 1.0000000 |
 | Piscirickettsiaceae | 0.5801048 | 1.0000000 |
-| Pseudomonadaceae    | 0.9700150 | 1.0000000 |
+| Pseudomonadaceae    | 0.9615192 | 1.0000000 |
 | Vibrionaceae        | 1.0000000 | 1.0000000 |
-| Xanthomonadaceae    | 0.5772114 | 1.0000000 |
+| Xanthomonadaceae    | 0.5722139 | 1.0000000 |
 
 Significant effect for Legionellaceae (more CsrA on conjugative
 plasmids, p_adj = 0.02), but this could be due to repeated sampling of
@@ -394,7 +481,7 @@ outbreak strains. Plot data.
     theme(legend.position="bottom", axis.text.x=element_text(angle=45, hjust=1)))
 ```
 
-![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 (mobtype_csra <- ggplot(data=compass_subset_fam_20, aes(alpha=encodes_csra, fill=Predicted.Mobility, x=MOB.types)) + 
@@ -405,7 +492,7 @@ outbreak strains. Plot data.
   geom_bar() + theme(legend.position="bottom", axis.text.x=element_text(angle=45, hjust=1)))
 ```
 
-![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
+![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 ``` r
 (mpftype_csra <- ggplot(data=compass_subset_fam_20, aes(alpha=encodes_csra, fill=Predicted.Mobility, x=MPF.types)) + 
@@ -416,7 +503,7 @@ outbreak strains. Plot data.
   geom_bar() + theme(legend.position="bottom", axis.text.x=element_text(angle=45, hjust=1)))
 ```
 
-![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-11-3.png)<!-- -->
+![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
 
 ``` r
 png(filename="./figs/1_3_mobility_csra.png", height=3, width=4.5, units="in", res=300)
@@ -465,7 +552,7 @@ counts_compass_family_20 <- filter(compass_totals, n>20)
   geom_bar() + theme(legend.position="bottom", axis.text.x=element_text(angle=45, hjust=1)))
 ```
 
-![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
 library(patchwork)
@@ -690,7 +777,7 @@ library(ggrepel)
     theme(legend.position="bottom"))
 ```
 
-![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](PLASMAN_1_RsmDistribution_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
 png(filename="./figs/1_5_family_umap.png", height=2.5, width=3.5, units="in", res=600)
