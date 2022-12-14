@@ -71,12 +71,12 @@ Investigate manually:
 find ./seqs_collected -name ".fasta" # gives 6 sequences
 ```
 
--   AM235768.1 is pQBR103 (exogenously isolated)
--   NZ_CP018784.1 RefSeq removed: genome length too large
--   NZ_CP027478.1 RefSeq removed: contaminated, genome length too large
--   NZ_CP013824.1 RefSeq removed: many frameshifted proteins
--   NZ_CP025492.1 Sequence has been updated
--   NZ_CP021016.1 Sequence has been updated
+- AM235768.1 is pQBR103 (exogenously isolated)
+- NZ_CP018784.1 RefSeq removed: genome length too large
+- NZ_CP027478.1 RefSeq removed: contaminated, genome length too large
+- NZ_CP013824.1 RefSeq removed: many frameshifted proteins
+- NZ_CP025492.1 Sequence has been updated
+- NZ_CP021016.1 Sequence has been updated
 
 Get the updated sequences, and annotate.
 
@@ -124,21 +124,19 @@ Note: there are certainly duplicates in here, because NCBI has added all
 of the files as both BCT (bacteria) and CON (contig).
 
 I’ll deal with this once the sequences have been extracted, by
-identifying identical sequences within projects. I’ll also attempt to
-identify sequences with less than some threshold divergence, to avoid
-the problem of multiple sampling.
+identifying identical sequences within projects.
 
 Also download and annotate key plasmid-free strains, in the same manner.
 
 These include:
 
--   *P. protegens* CHA0: LS999205
--   *P. fluorescens* Pf0-1: CP000094
--   *P. protegenes* Pf-5: CP000076
--   *P. fluorescens* SBW25: AM181176
--   *P. putida* KT2440: AE015451
--   *P. aeruginosa* PAO1: AE004091
--   *P. aeruginosa* PA14: CP000438
+- *P. protegens* CHA0: LS999205
+- *P. fluorescens* Pf0-1: CP000094
+- *P. protegenes* Pf-5: CP000076
+- *P. fluorescens* SBW25: AM181176
+- *P. putida* KT2440: AE015451
+- *P. aeruginosa* PAO1: AE004091
+- *P. aeruginosa* PA14: CP000438
 
 ``` bash
 mkdir -p ./seqs_chr/fasta
@@ -238,7 +236,9 @@ comp <- read_rds("./working_1/comp.rds") %>%
   rename(project=Accession)
 ```
 
-Then the NA sequences. Pull all into a single dataframe.
+Then the NA sequences. Pull all into a single dataframe. Identify
+putative duplicates by finding genes which have the same start and end
+coordinates.
 
 ``` r
 csra_seqs <- read.table("./working_2/COMPASS_chr_CsrA_matches_na.tsv", header=FALSE, sep="\t", col.names=c("header","seq_na","V3"),
@@ -270,6 +270,7 @@ write.table(csra_seqs, file="./working_2/COMPASS_CsrA_matches_details.tsv", sep=
 Examined all, and double-checked the source of those genes annotated
 `unk` and determined whether they are indeed chromosomal. Did some
 additional editing at this stage to ensure I had the sequences required.
+Take only the sequences annotated ‘keep’.
 
 ``` r
 csra <- read.table("./working_2/COMPASS_CsrA_matches_details_edit.tsv", sep="\t",
@@ -296,37 +297,32 @@ tots %>% count(Genus, name="num_strains")
     ## 13          Vibrio           1
     ## 14     Xanthomonas           9
 
-``` r
-# Some strains in the joy plot are not here. Which?
-# compass_subset_fam %>% filter(encodes_csra=="Y" & !(Accession %in% tots$project))
-```
-
 Recall:
 
--   AM235768.1 is pQBR103 (exogenously isolated)
--   NZ_CP018784.1 RefSeq removed: genome length too large
--   NZ_CP027478.1 RefSeq removed: contaminated, genome length too large
--   NZ_CP013824.1 RefSeq removed: many frameshifted proteins
--   NZ_CP025492.1 Sequence has been updated
--   NZ_CP021016.1 Sequence has been updated
+- AM235768.1 is pQBR103 (exogenously isolated)
+- NZ_CP018784.1 RefSeq removed: genome length too large
+- NZ_CP027478.1 RefSeq removed: contaminated, genome length too large
+- NZ_CP013824.1 RefSeq removed: many frameshifted proteins
+- NZ_CP025492.1 Sequence has been updated
+- NZ_CP021016.1 Sequence has been updated
 
 This leaves 5 sequences.
 
--   CP027167.1 - This genome has two plasmids with CsrA on, so the whole
-    genome was represented, so this genome is under another ‘project’
-    CP027170.1
--   NZ_CP019872.1 - This genome has two plasmids with CsrA on, so the
-    whole genome was represented, so this genome is under another
-    ‘project’ NZ_CP019874.1
--   NZ_CP021284.1 - This genome has two plasmids with CsrA on, so the
-    whole genome was represented, so this genome is under another
-    ‘project’ NZ_CP021285.1
--   NZ_CP021974.1 - This genome has two plasmids with CsrA on, so the
-    whole genome was represented, so this genome is under another
-    ‘project’ NZ_CP021975.1
--   NZ_CP026563.1 - This genome has two plasmids with CsrA on, so the
-    whole genome was represented, so this genome is under another
-    ‘project’ NZ_CP026564.1
+- CP027167.1 - This genome has two plasmids with CsrA on, so the whole
+  genome was represented, so this genome is under another ‘project’
+  CP027170.1
+- NZ_CP019872.1 - This genome has two plasmids with CsrA on, so the
+  whole genome was represented, so this genome is under another
+  ‘project’ NZ_CP019874.1
+- NZ_CP021284.1 - This genome has two plasmids with CsrA on, so the
+  whole genome was represented, so this genome is under another
+  ‘project’ NZ_CP021285.1
+- NZ_CP021974.1 - This genome has two plasmids with CsrA on, so the
+  whole genome was represented, so this genome is under another
+  ‘project’ NZ_CP021975.1
+- NZ_CP026563.1 - This genome has two plasmids with CsrA on, so the
+  whole genome was represented, so this genome is under another
+  ‘project’ NZ_CP026564.1
 
 ``` r
 ### How many strains without corresponding chromosome csrA genes?
@@ -398,10 +394,10 @@ write.table(outseqs, file="./working_2/aln/csrA_Pseudomonas.fasta", row.names=FA
 
 Approach:
 
--   Do trees with everything to examine and find duplicates
--   Do trees with deduplicated sequences
--   Do trees with conserved positions only to avoid problems with a
-    gappy alignment
+- Do trees with everything to examine and find duplicates
+- Do trees with deduplicated sequences
+- Do trees with conserved positions only to avoid problems with a gappy
+  alignment
 
 Add in the pQBR103 sequence, and the *E. coli* outgroup, and align.
 
@@ -414,9 +410,9 @@ Did a rough alignment in Aliview using MUSCLE. This enabled me to see
 areas with misannotated start sites. Cleared these up manually, by
 deleting parts of the sequence before the canonical start codon for:
 
--   71725141_00007
--   71725141_00080
--   1352817906_03961
+- 71725141_00007
+- 71725141_00080
+- 1352817906_03961
 
 Also edited the names of the sequences from pQBR103 and E. coli to
 ensure there is only one underscore, to facilitate matching later.
@@ -430,15 +426,10 @@ prank -d=./working_2/aln/csrA_Pseudomonas_edit.fasta \
   
 cp ./working_2/aln/csrA_Pseudomonas_edit.aln.best.fas ./working_2/aln/csrA_Pseudomonas_edit.aln.fasta
 
-# scp ./working_2/aln/csrA_Pseudomonas_edit.aln.fasta jamesh@server:/path_to_file/csrA_Pseudomonas_edit.aln.fasta
-# on the server  
-
 raxmlHPC -f a -m GTRCAT -p 12345 -x 12345 -# 100 -s csrA_Pseudomonas_edit.aln.fasta -n PsT1 
 raxmlHPC -f b -m GTRCAT -n PsT1.tre -t RAxML_bestTree.PsT1 -z RAxML_bootstrap.PsT1
 
 # Found 66 sequences that are exactly identical to other sequences in the alignment.
-
-# scp jamesh@server:/path_to_file/*.PsT1 ./trees/pseudomonas
 ```
 
 Good start. Examining this tree in Figtree identifies a number of
@@ -520,13 +511,9 @@ cp ./working_2/aln/csrA_Pseudomonas_nodups_edit.aln.best.fas ./working_2/aln/csr
 Build tree.
 
 ``` bash
-# scp ./working_2/aln/csrA_Pseudomonas_nodups_edit.aln.fasta jamesh@server:/path_to_file/csrA_Pseudomonas_nodups_edit.aln.fasta
-
 raxmlHPC -f a -m GTRCAT -p 12345 -x 12345 -# 100 -s csrA_Pseudomonas_nodups_edit.aln.fasta -n PsT2
 
 raxmlHPC -f b -m GTRCAT -n PsT2.tre -t RAxML_bestTree.PsT2 -z RAxML_bootstrap.PsT2
-
-# scp jamesh@server:/path_to_file/*.PsT2 ./trees/pseudomonas
 ```
 
 Various trees examined in Figtree. Use `ggtree` to generate an annotated
@@ -564,8 +551,8 @@ labels_ps <- labels_ps %>% left_join(highlights_ps, by="label", all=TRUE)
 
 Key trees to plot:
 
--   PsT1: overview of Pseudomonas plasmid CsrA diversity
--   PsT2: as PsT1 but with duplicates removed.
+- PsT1: overview of Pseudomonas plasmid CsrA diversity
+- PsT2: as PsT1 but with duplicates removed.
 
 ``` r
 library(treeio)

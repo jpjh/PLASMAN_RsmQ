@@ -132,7 +132,7 @@ mv ./seqs_collected/NZ_CP021016.1 ./working_2/seqs_removed
 
 Note: there are certainly duplicates in here, because NCBI has added all of the files as both BCT (bacteria) and CON (contig). 
 
-I'll deal with this once the sequences have been extracted, by identifying identical sequences within projects. I'll also attempt to identify sequences with less than some threshold divergence, to avoid the problem of multiple sampling.
+I'll deal with this once the sequences have been extracted, by identifying identical sequences within projects.
 
 Also download and annotate key plasmid-free strains, in the same manner.
 
@@ -229,7 +229,7 @@ comp <- read_rds("./working_1/comp.rds") %>%
   rename(project=Accession)
 ```
 
-Then the NA sequences. Pull all into a single dataframe.
+Then the NA sequences. Pull all into a single dataframe. Identify putative duplicates by finding genes which have the same start and end coordinates. 
 
 ```{r}
 csra_seqs <- read.table("./working_2/COMPASS_chr_CsrA_matches_na.tsv", header=FALSE, sep="\t", col.names=c("header","seq_na","V3"),
@@ -252,7 +252,7 @@ write.table(csra_seqs, file="./working_2/COMPASS_CsrA_matches_details.tsv", sep=
             row.names=FALSE, quote=FALSE)
 ```
 
-Examined all, and double-checked the source of those genes annotated `unk` and determined whether they are indeed chromosomal. Did some additional editing at this stage to ensure I had the sequences required.
+Examined all, and double-checked the source of those genes annotated `unk` and determined whether they are indeed chromosomal. Did some additional editing at this stage to ensure I had the sequences required. Take only the sequences annotated 'keep'. 
 
 ```{r}
 csra <- read.table("./working_2/COMPASS_CsrA_matches_details_edit.tsv", sep="\t",
@@ -261,9 +261,6 @@ csra <- read.table("./working_2/COMPASS_CsrA_matches_details_edit.tsv", sep="\t"
 tots <- csra %>% count(project, Genus, Species, name="total")
 
 tots %>% count(Genus, name="num_strains") 
-
-# Some strains in the joy plot are not here. Which?
-# compass_subset_fam %>% filter(encodes_csra=="Y" & !(Accession %in% tots$project))
 ```
 
 Recall:
@@ -359,15 +356,10 @@ prank -d=./working_2/aln/csrA_Pseudomonas_edit.fasta \
   
 cp ./working_2/aln/csrA_Pseudomonas_edit.aln.best.fas ./working_2/aln/csrA_Pseudomonas_edit.aln.fasta
 
-# scp ./working_2/aln/csrA_Pseudomonas_edit.aln.fasta jamesh@server:/path_to_file/csrA_Pseudomonas_edit.aln.fasta
-# on the server  
-
 raxmlHPC -f a -m GTRCAT -p 12345 -x 12345 -# 100 -s csrA_Pseudomonas_edit.aln.fasta -n PsT1 
 raxmlHPC -f b -m GTRCAT -n PsT1.tre -t RAxML_bestTree.PsT1 -z RAxML_bootstrap.PsT1
 
 # Found 66 sequences that are exactly identical to other sequences in the alignment.
-
-# scp jamesh@server:/path_to_file/*.PsT1 ./trees/pseudomonas
 ```  
 
 Good start. Examining this tree in Figtree identifies a number of duplicates, and some poor bootstrap support for some of the groups. 
@@ -428,13 +420,9 @@ cp ./working_2/aln/csrA_Pseudomonas_nodups_edit.aln.best.fas ./working_2/aln/csr
 Build tree.
 
 ```{bash, eval=FALSE}
-# scp ./working_2/aln/csrA_Pseudomonas_nodups_edit.aln.fasta jamesh@server:/path_to_file/csrA_Pseudomonas_nodups_edit.aln.fasta
-
 raxmlHPC -f a -m GTRCAT -p 12345 -x 12345 -# 100 -s csrA_Pseudomonas_nodups_edit.aln.fasta -n PsT2
 
 raxmlHPC -f b -m GTRCAT -n PsT2.tre -t RAxML_bestTree.PsT2 -z RAxML_bootstrap.PsT2
-
-# scp jamesh@server:/path_to_file/*.PsT2 ./trees/pseudomonas
 ```
 
 Various trees examined in Figtree. Use `ggtree` to generate an annotated figure of the full tree, and with duplicates removed. 
