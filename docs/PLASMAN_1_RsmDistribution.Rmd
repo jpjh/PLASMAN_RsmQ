@@ -28,7 +28,7 @@ Questions:
 - What are the sequences of these genes?
 - What kinds of plasmids are these sequences on?
 
-COMPASS plasmid database was annotated using [PROKKA](https://github.com/tseemann/prokka), with default settings: PROKKA uses UniProtKB (SwissProt) databases to annotate.
+COMPASS plasmid database was annotated using [PROKKA](https://github.com/tseemann/prokka) veresion 14.6.1, with default settings: PROKKA uses UniProtKB (SwissProt) databases to annotate.
 
 Link to annotation in `./ref/COMPASS_prokka.gff` and `./ref/COMPASS_prokka.faa`.
 
@@ -87,7 +87,7 @@ write_rds(file="./working_1/dups.rds", dups)
 write_rds(file="./working_1/gff.rds", gff)
 ```
 
-Make some diagnostic plots. Note: `comp` is the full COMPASS database, `compass` is with duplicates removed. 
+Make some diagnostic plots. Note: `comp` is the full COMPASS database, `compass` is with duplicates removed. Duplicates were defined as plasmids with identical source genus, size, replicon content, predicted mobility, number of predicted transposases, number of predicted integrases, and number of predicted AMR genes.
 
 ```{r}
 source("./func/gff_functions.R")

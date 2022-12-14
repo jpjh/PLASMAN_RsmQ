@@ -12,8 +12,9 @@ Questions:
 - What kinds of plasmids are these sequences on?
 
 COMPASS plasmid database was annotated using
-[PROKKA](https://github.com/tseemann/prokka), with default settings:
-PROKKA uses UniProtKB (SwissProt) databases to annotate.
+[PROKKA](https://github.com/tseemann/prokka) veresion 14.6.1, with
+default settings: PROKKA uses UniProtKB (SwissProt) databases to
+annotate.
 
 Link to annotation in `./ref/COMPASS_prokka.gff` and
 `./ref/COMPASS_prokka.faa`.
@@ -79,7 +80,10 @@ write_rds(file="./working_1/gff.rds", gff)
 ```
 
 Make some diagnostic plots. Note: `comp` is the full COMPASS database,
-`compass` is with duplicates removed.
+`compass` is with duplicates removed. Duplicates were defined as
+plasmids with identical source genus, size, replicon content, predicted
+mobility, number of predicted transposases, number of predicted
+integrases, and number of predicted AMR genes.
 
 ``` r
 source("./func/gff_functions.R")
@@ -462,9 +466,9 @@ counts_family_mobility %>% group_by(Family) %>%
 | Microbacteriaceae   | 1.0000000 | 1.0000000 |
 | Micrococcaceae      | 1.0000000 | 1.0000000 |
 | Piscirickettsiaceae | 0.5801048 | 1.0000000 |
-| Pseudomonadaceae    | 0.9615192 | 1.0000000 |
+| Pseudomonadaceae    | 0.9690155 | 1.0000000 |
 | Vibrionaceae        | 1.0000000 | 1.0000000 |
-| Xanthomonadaceae    | 0.5722139 | 1.0000000 |
+| Xanthomonadaceae    | 0.5472264 | 1.0000000 |
 
 Significant effect for Legionellaceae (more CsrA on conjugative
 plasmids, p_adj = 0.02), but this could be due to repeated sampling of
