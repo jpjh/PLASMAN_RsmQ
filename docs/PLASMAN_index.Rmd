@@ -1,7 +1,6 @@
 ---
 title: "Manipulative plasmids through RsmQ: Index page"
 author: "jpjh"
-date: "November 2021"
 output: rmarkdown::github_document
 ---
 

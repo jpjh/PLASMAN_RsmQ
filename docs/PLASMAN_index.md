@@ -1,7 +1,10 @@
 Manipulative plasmids through RsmQ: Index page
 ================
 jpjh
-November 2021
+
+Analysis of RsmA homologues across the plasmids of the COMPASS database.
+
+Click through for the different sections.
 
 1.  **[RsmA distribution across plasmids
     (`PLASMAN_1_RsmDistribution.Rmd`)](PLASMAN_1_RsmDistribution.md)**
