@@ -23,7 +23,7 @@ theme_set(theme_github())
 
 ### Prediction of CsrA/RsmA binding sites on *Pseudomonas* plasmids
 
-Script obtained from [Rahul Kulkarni, University of Massachusetts, Boston](https://www.umb.edu/academics/csm/faculty_staff/rahul_kulkarni), which was published in Kulkarni PR, Jia T, Kuehne SA, Kerkering TM, Morris ER, Searle MS, Heeb S, Rao J, Kulkarni RV. 2014 A sequence-based approach for prediction of CsrA/RsmA targets in bacteria with experimental validation in Pseudomonas aeruginosa. Nucleic Acids Res. 42, 6811–6825. (doi: [10.1093/nar/gku309](dx.doi.org/10.1093/nar/gku309)). Some small alterations were made to the script.
+Script obtained from [Rahul Kulkarni, University of Massachusetts, Boston](https://www.umb.edu/academics/csm/faculty_staff/rahul_kulkarni), which was published in Kulkarni PR, Jia T, Kuehne SA, Kerkering TM, Morris ER, Searle MS, Heeb S, Rao J, Kulkarni RV. 2014 A sequence-based approach for prediction of CsrA/RsmA targets in bacteria with experimental validation in Pseudomonas aeruginosa. Nucleic Acids Res. 42, 6811–6825. (doi: [10.1093/nar/gku309](https://dx.doi.org/10.1093/nar/gku309)). Some small alterations were made to the script.
 
 Run against all *Pseudomonas* plasmids from COMPASS, and plot the distribution of sites for CsrA/RsmA-containing plasmids vs. non-CsrA/RsmA-containing plasmids.
 

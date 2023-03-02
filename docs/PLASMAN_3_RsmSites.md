@@ -12,7 +12,7 @@ Morris ER, Searle MS, Heeb S, Rao J, Kulkarni RV. 2014 A sequence-based
 approach for prediction of CsrA/RsmA targets in bacteria with
 experimental validation in Pseudomonas aeruginosa. Nucleic Acids Res.
 42, 6811–6825. (doi:
-[10.1093/nar/gku309](dx.doi.org/10.1093/nar/gku309)). Some small
+[10.1093/nar/gku309](https://dx.doi.org/10.1093/nar/gku309)). Some small
 alterations were made to the script.
 
 Run against all *Pseudomonas* plasmids from COMPASS, and plot the
